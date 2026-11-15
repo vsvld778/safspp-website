@@ -24,6 +24,8 @@ if [[ "$MODE" == --check ]]; then
   echo 'Prerequisites found. No system changes made. Run --apply after review.'
   exit 0
 fi
+exec 9>/run/lock/safspp-deploy.lock
+flock -n 9 || { echo 'Another SAFSPP deployment/activation is running.' >&2; exit 1; }
 if ! getent passwd safspp >/dev/null; then
   useradd --system --user-group --home-dir /var/lib/safspp --no-create-home --shell /usr/sbin/nologin safspp
 fi
@@ -112,8 +114,23 @@ cat > /etc/nginx/conf.d/safspp-log.conf <<'NGINX'
 # No query strings, cookies or referrers in the public-site request log.
 log_format safspp_safe '$remote_addr [$time_local] "$request_method $uri $server_protocol" $status $body_bytes_sent';
 NGINX
-# Preserve HTTPS on repeat deployment. Initial bootstrap must remain HTTP-only.
-if [[ -f /etc/nginx/sites-available/safspp.conf ]] && grep -q 'listen 443 ssl' /etc/nginx/sites-available/safspp.conf; then
+# Preserve an explicitly activated custom domain on repeat deployments.
+DEPLOYMENT_MODE=ip
+if [[ -f /etc/safspp/deployment-mode ]]; then
+  DEPLOYMENT_MODE=$(cat /etc/safspp/deployment-mode)
+fi
+case "$DEPLOYMENT_MODE" in ip|domain|domain-www) ;; *) echo 'Unknown saved deployment mode; inspect /etc/safspp/deployment-mode.' >&2; exit 1 ;; esac
+if [[ "$DEPLOYMENT_MODE" == domain || "$DEPLOYMENT_MODE" == domain-www ]]; then
+  install -m 0644 "$DEPLOY/nginx/safspp-https.conf" /etc/nginx/sites-available/safspp-ip-fallback.conf
+  install -m 0644 "$DEPLOY/nginx/safspp-domain.conf" /etc/nginx/sites-available/safspp.conf
+  if [[ "$DEPLOYMENT_MODE" == domain-www ]]; then
+    cat "$DEPLOY/nginx/safspp-domain-www.conf" >> /etc/nginx/sites-available/safspp.conf
+    python3 "$DEPLOY/configure-domain-env.py" "$ENV_FILE" --www
+  else
+    python3 "$DEPLOY/configure-domain-env.py" "$ENV_FILE"
+  fi
+# Preserve IP HTTPS if no custom domain has been activated.
+elif [[ -f /etc/nginx/sites-available/safspp.conf ]] && grep -q 'listen 443 ssl' /etc/nginx/sites-available/safspp.conf; then
   install -m 0644 "$DEPLOY/nginx/safspp-https.conf" /etc/nginx/sites-available/safspp.conf
 else
   install -m 0644 "$DEPLOY/nginx/safspp-http.conf" /etc/nginx/sites-available/safspp.conf
@@ -135,7 +152,7 @@ curl --fail --silent --show-error --retry 8 --retry-connrefused --retry-delay 1 
 install -d -o root -g root -m 0700 /var/lib/safspp-deploy
 /opt/safspp/venv/bin/python -m pip freeze > /var/lib/safspp-deploy/requirements-installed.txt
 git -C "$SOURCE" rev-parse HEAD > /var/lib/safspp-deploy/source-commit.txt
-chmod 0600 /var/lib/safspp-deploy/*
+chmod 0600 /var/lib/safspp-deploy/requirements-installed.txt /var/lib/safspp-deploy/source-commit.txt
 /usr/local/sbin/safspp-backup
 echo 'Portal started; registration remains as configured. HTTPS is a separate activation step.'
 echo 'Host firewall/swap/security updates: bash /opt/safspp/source/portal/deploy/harden-host.sh'

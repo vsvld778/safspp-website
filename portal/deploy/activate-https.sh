@@ -2,6 +2,12 @@
 set -Eeuo pipefail
 umask 027
 (( EUID == 0 )) || { echo 'Run as root.' >&2; exit 1; }
+exec 9>/run/lock/safspp-deploy.lock
+flock -n 9 || { echo 'Another SAFSPP deployment/activation is running.' >&2; exit 1; }
+if [[ -f /etc/safspp/deployment-mode ]] && grep -Eq '^domain(-www)?$' /etc/safspp/deployment-mode; then
+  echo 'A custom domain is active. Use activate-domain.sh; IP activation must not replace it.' >&2
+  exit 1
+fi
 DEPLOY=/opt/safspp/source/portal/deploy
 CERT=/etc/letsencrypt/live/safspp-ip
 [[ -r "$CERT/fullchain.pem" && -r "$CERT/privkey.pem" ]] || { echo 'Issue the IP certificate first; this script never requests one.' >&2; exit 1; }

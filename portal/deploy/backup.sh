@@ -23,7 +23,7 @@ CONFIG_PATHS=(
   etc/systemd/system/safspp-backup.service
   etc/systemd/system/safspp-backup.timer
 )
-for optional in var/lib/safspp-deploy etc/apt/apt.conf.d/52safspp-security etc/fail2ban/jail.d/safspp-sshd.local etc/sysctl.d/90-safspp-swap.conf; do
+for optional in var/lib/safspp-deploy etc/nginx/sites-available/safspp-ip-fallback.conf etc/apt/apt.conf.d/52safspp-security etc/fail2ban/jail.d/safspp-sshd.local etc/sysctl.d/90-safspp-swap.conf; do
   [[ ! -e "/$optional" ]] || CONFIG_PATHS+=("$optional")
 done
 tar -czf "$BACKUP/configuration.tar.gz" -C / "${CONFIG_PATHS[@]}"
