@@ -136,12 +136,15 @@ install -m 0644 "$CANDIDATE" "$SITE"
 ln -sfn "$SITE" "$ENABLED"
 nginx -t
 systemctl reload nginx
+# Nginx reload returns before all new workers are ready. Retry short-lived old
+# worker responses, including certificate mismatches, without weakening TLS.
+TLS_RETRY=(--retry 5 --retry-all-errors --retry-delay 1 --retry-max-time 20 --connect-timeout 3 --max-time 8)
 # Resolve locally while retaining normal HTTPS hostname/chain verification.
-curl --fail --silent --show-error --max-time 15 --resolve migrantmost.ru:443:127.0.0.1 https://migrantmost.ru/healthz/ >/dev/null
+curl --fail --silent --show-error "${TLS_RETRY[@]}" --resolve migrantmost.ru:443:127.0.0.1 https://migrantmost.ru/healthz/ >/dev/null
 # IP clients may omit SNI; confirm that the fallback still presents the IP cert.
-curl --fail --silent --show-error --max-time 15 --resolve 194.58.103.10:443:127.0.0.1 https://194.58.103.10/healthz/ >/dev/null
+curl --fail --silent --show-error "${TLS_RETRY[@]}" --resolve 194.58.103.10:443:127.0.0.1 https://194.58.103.10/healthz/ >/dev/null
 if (( WITH_WWW )); then
-  RESULT=$(curl --silent --show-error --max-time 15 --resolve www.migrantmost.ru:443:127.0.0.1 --output /dev/null --write-out '%{http_code} %{redirect_url}' https://www.migrantmost.ru/)
+  RESULT=$(curl --fail --silent --show-error "${TLS_RETRY[@]}" --resolve www.migrantmost.ru:443:127.0.0.1 --output /dev/null --write-out '%{http_code} %{redirect_url}' https://www.migrantmost.ru/)
   [[ "$RESULT" == '308 https://migrantmost.ru/' ]]
 fi
 install -d -m 0755 /etc/letsencrypt/renewal-hooks/deploy
