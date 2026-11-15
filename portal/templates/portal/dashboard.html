@@ -15,7 +15,7 @@
     <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h4M8 12h8M8 16h5"/></svg></div>
     <h2>Ваше первое обращение</h2>
     <p>{% if intake_mode == 'disabled' %}Пока здесь пусто. После открытия приёма вы сможете описать ситуацию и следить за ответами в кабинете.{% else %}Расскажите, с чем нужна помощь. У обращения появится номер, а ответы будут сохраняться здесь.{% endif %}</p>
-    {% if intake_mode != 'disabled' %}<a class="button" href="{% url 'case_create' %}">Описать ситуацию <span aria-hidden="true">→</span></a>{% endif %}
+    {% if intake_mode != 'disabled' %}<a class="button" href="{% url 'case_create' %}">Описать ситуацию</a>{% endif %}
   </section>
 {% endif %}
 <div class="support-strip"><div><strong>Своими словами</strong><p>Для первого сообщения не нужно разбираться в юридических терминах.</p></div><div><strong>Без сканов документов</strong><p>Не добавляйте паспортные номера и банковские реквизиты в описание.</p></div><div><strong>В одном обращении</strong><p>Все уточнения по одной ситуации удобно вести в общей переписке.</p></div></div>

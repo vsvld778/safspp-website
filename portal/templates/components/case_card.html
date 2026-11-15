@@ -2,5 +2,5 @@
   <div class="case-top"><span class="case-number">{{ case.reference }}{% if case.is_test %} · тест{% endif %}</span><span class="badge badge-{{ case.status }}">{{ case.get_status_display }}</span></div>
   <h3>{{ case.title }}</h3>
   <div class="case-meta"><span>{{ case.get_category_display }}</span><span>Обновлено {{ case.updated_at|date:'d.m.Y' }}</span></div>
-  <span class="case-arrow" aria-hidden="true">→</span>
+ 
 </a>

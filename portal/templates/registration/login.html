@@ -20,7 +20,7 @@
       {% csrf_token %}
       {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
       {% include 'components/form_fields.html' %}
-      <button class="button" type="submit">Войти в кабинет <span aria-hidden="true">→</span></button>
+      <button class="button" type="submit">Войти в кабинет</button>
     </form>
     <p class="auth-alt">Ещё нет кабинета? <a href="{% url 'signup' %}">{% if registration_mode == 'closed' %}О регистрации{% else %}Создать кабинет{% endif %}</a></p>
     <div class="auth-note"><strong>Представляете организацию?</strong>Войдите в свой кабинет. Раздел организации доступен после подтверждения доступа координатором.</div>

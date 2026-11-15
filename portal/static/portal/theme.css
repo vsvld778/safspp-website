@@ -1,0 +1,49 @@
+/* BEGIN SHARED THEME CONTROLS */
+:root{--ms-theme-canvas:#faf8f2;--ms-theme-panel:#fffdf9;--ms-theme-soft:#f2f3ec;--ms-theme-ink:#273e3d;--ms-theme-muted:#596b64;--ms-theme-line:#d9ded3;--ms-theme-accent:#086b73;--ms-theme-selected:#eaf0e8;--ms-theme-gold:#c49a4a}
+:root[data-theme="dark"]{--ms-theme-canvas:#0f1e20;--ms-theme-panel:#17292b;--ms-theme-soft:#1d3335;--ms-theme-ink:#edf3eb;--ms-theme-muted:#b0c1b9;--ms-theme-line:#31494a;--ms-theme-accent:#73c9c6;--ms-theme-selected:#213d37;--ms-theme-gold:#d7b575}
+[data-theme-open]{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;min-width:44px;min-height:44px;padding:10px;margin:0;border:1px solid var(--ms-theme-line);border-radius:14px;background:var(--ms-theme-panel);color:var(--ms-theme-accent);cursor:pointer;line-height:1}
+[data-theme-open][hidden]{display:none!important}
+[data-theme-open]:hover,[data-theme-open][aria-expanded="true"]{background:var(--ms-theme-selected);border-color:var(--ms-theme-accent)}
+.ms-theme-icon{display:block;width:22px;height:22px;flex:none}
+.ms-theme-dialog{width:min(560px,calc(100% - 32px));max-width:560px;max-height:90vh;max-height:calc(100dvh - 32px);box-sizing:border-box;padding:26px;border:1px solid var(--ms-theme-line);border-radius:24px;background:var(--ms-theme-panel);color:var(--ms-theme-ink);box-shadow:0 24px 90px #00000040;overflow:auto;overscroll-behavior:contain}
+.ms-theme-dialog::backdrop{background:#102e4380}
+.ms-theme-heading{display:flex;align-items:flex-start;justify-content:space-between;gap:16px;margin-bottom:23px}
+.ms-theme-dialog .ms-theme-heading h2{color:var(--ms-theme-ink);font-family:Georgia,"Times New Roman",serif;font-size:31px;font-weight:400;letter-spacing:-.035em;line-height:1.2;margin:0 0 9px}
+.ms-theme-dialog .ms-theme-heading p{color:var(--ms-theme-muted);font-size:14px;line-height:1.5;margin:0}
+.ms-theme-close{display:grid;place-items:center;flex:0 0 44px;width:44px;height:44px;padding:10px;border:1px solid var(--ms-theme-line);border-radius:50%;background:var(--ms-theme-soft);color:var(--ms-theme-ink);cursor:pointer}
+.ms-theme-options{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.ms-theme-option{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:0;padding:13px 10px;border:1px solid var(--ms-theme-line);border-radius:20px;background:var(--ms-theme-panel);color:var(--ms-theme-ink);font:inherit;text-align:center;cursor:pointer}
+.ms-theme-option:hover{background:var(--ms-theme-soft)}
+.ms-theme-option[aria-pressed="true"]{border-color:var(--ms-theme-accent);box-shadow:0 0 0 1px var(--ms-theme-accent);background:var(--ms-theme-selected)}
+.ms-theme-option-label{display:flex;align-items:center;justify-content:center;max-width:100%;min-height:39px;font-size:13px;font-weight:600;line-height:1.45;overflow-wrap:anywhere}
+.ms-theme-check{display:grid;place-items:center;width:24px;height:24px;border:1.5px solid var(--ms-theme-line);border-radius:50%}
+.ms-theme-check .ms-theme-icon{width:15px;height:15px;visibility:hidden}
+.ms-theme-option[aria-pressed="true"] .ms-theme-check{background:var(--ms-theme-accent);border-color:var(--ms-theme-accent);color:var(--ms-theme-panel)}
+.ms-theme-option[aria-pressed="true"] .ms-theme-check .ms-theme-icon{visibility:visible}
+.ms-theme-preview{display:flex;flex-direction:column;gap:9px;width:100%;max-width:104px;height:132px;box-sizing:border-box;padding:12px 9px;border:1px solid #d6dece;border-radius:13px;background:#faf8f2;box-shadow:0 3px 8px #00000009}
+.ms-preview-top{height:6px;width:56%;border-radius:4px;background:#496d62}
+.ms-preview-hero{height:38px;border-radius:7px;background:#143f43;border-top:2px solid #c49a4a}
+.ms-preview-cards{display:flex;gap:6px;height:22px}.ms-preview-cards i{flex:1;border-radius:5px;background:#e4eadf}
+.ms-preview-nav{margin-top:auto;height:12px;border-radius:6px;background:#e4eadf}
+.ms-theme-preview-dark{background:#0f1e20;border-color:#31494a}
+.ms-theme-preview-dark .ms-preview-top{background:#a9c5b6}
+.ms-theme-preview-dark .ms-preview-hero{background:#17484a;border-top-color:#d7b575}
+.ms-theme-preview-dark .ms-preview-cards i,.ms-theme-preview-dark .ms-preview-nav{background:#29413e}
+.ms-theme-preview-system{background:linear-gradient(90deg,#faf8f2 50%,#0f1e20 50%)}
+.ms-theme-preview-system .ms-preview-top{background:linear-gradient(90deg,#496d62 88%,#a9c5b6 88%)}
+.ms-theme-preview-system .ms-preview-hero{background:linear-gradient(90deg,#143f43 50%,#17484a 50%)}
+.ms-theme-preview-system .ms-preview-cards i:last-child{background:#29413e}
+.ms-theme-preview-system .ms-preview-nav{background:linear-gradient(90deg,#e4eadf 50%,#29413e 50%)}
+.ms-theme-dialog .ms-theme-note{color:var(--ms-theme-muted);font-size:12px;line-height:1.7;margin:21px 0 17px}
+.ms-theme-done{display:flex;align-items:center;justify-content:center;width:100%;min-height:48px;padding:13px 20px;background:#086b73;color:#fff;border:1px solid #086b73;border-radius:12px;font:inherit;font-size:15px;font-weight:600;cursor:pointer}
+.ms-theme-done:hover{background:#07545a;border-color:#07545a}
+[data-theme-open]:focus-visible,.ms-theme-dialog button:focus-visible{outline:3px solid var(--ms-theme-gold);outline-offset:4px}
+[data-theme="dark"] .ms-theme-dialog{box-shadow:0 28px 100px #00000066}
+[data-theme="dark"] .ms-theme-dialog::backdrop{background:#020d1199}
+[data-theme="dark"] .ms-theme-done{background:#0f737a;border-color:#0f737a}
+[data-theme="dark"] .ms-theme-done:hover{background:#0c6269;border-color:#0c6269}
+@media(max-width:560px){.ms-theme-dialog{padding:22px 18px}.ms-theme-options{gap:9px}.ms-theme-option{padding:12px 7px}.ms-theme-option-label{font-size:12px}.ms-theme-heading{margin-bottom:20px}}
+@media(max-width:370px){.ms-theme-dialog{padding:20px 16px}.ms-theme-options{gap:7px}.ms-theme-option{padding:10px 6px}.ms-theme-preview{height:119px;padding:10px 7px;gap:8px}.ms-theme-dialog .ms-theme-heading h2{font-size:28px}}
+@media(prefers-reduced-motion:reduce){[data-theme-open],.ms-theme-dialog,.ms-theme-dialog *{animation:none!important;transition:none!important}}
+@media print{[data-theme-open],.ms-theme-dialog{display:none!important}}
+/* END SHARED THEME CONTROLS */

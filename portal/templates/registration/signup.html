@@ -18,7 +18,7 @@
     <form method="post" action="{% url 'signup' %}">
       {% csrf_token %}
       {% include 'components/form_fields.html' %}
-      <button class="button" type="submit">Создать кабинет <span aria-hidden="true">→</span></button>
+      <button class="button" type="submit">Создать кабинет</button>
     </form>
     <p class="auth-alt">Уже зарегистрированы? <a href="{% url 'login' %}">Войти</a></p>
     <div class="auth-note">Email используется для входа. Не передавайте пароль другим людям.</div>

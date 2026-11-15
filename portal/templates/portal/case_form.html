@@ -11,7 +11,7 @@
     <h2 id="case-form-title">Ваш вопрос</h2><p>Поля со звёздочкой обязательны.</p>
     <form method="post" action="{% url 'case_create' %}">
       {% csrf_token %}{% include 'components/form_fields.html' %}
-      <div class="form-actions"><button class="button" type="submit">{% if intake_mode == 'test' %}Создать тестовое обращение{% else %}Отправить обращение{% endif %}<span aria-hidden="true">→</span></button><a href="{% url 'dashboard' %}" class="small">Отмена</a></div>
+      <div class="form-actions"><button class="button" type="submit">{% if intake_mode == 'test' %}Создать тестовое обращение{% else %}Отправить обращение{% endif %}</button><a href="{% url 'dashboard' %}" class="small">Отмена</a></div>
       <p class="form-footer-note">После отправки вы увидите номер обращения и сможете продолжить переписку в кабинете.</p>
     </form>
   </section>

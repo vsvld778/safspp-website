@@ -4,11 +4,14 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#143f43">
+  <meta name="theme-color" content="#faf8f2">
   <meta name="robots" content="noindex, nofollow">
   <title>{% block title %}Личный кабинет{% endblock %} — Мост поддержки</title>
+  <script src="{% static 'portal/theme.js' %}"></script>
   <link rel="icon" type="image/webp" href="{% static 'portal/logo-mark.webp' %}">
   <link rel="stylesheet" href="{% static 'portal/portal.css' %}">
+  <link rel="stylesheet" href="{% static 'portal/theme.css' %}">
+  <link rel="stylesheet" href="{% static 'portal/appearance.css' %}">
   <script defer src="{% static 'portal/portal.js' %}"></script>
 </head>
 <body>
@@ -23,12 +26,13 @@
       <span class="header-divider" aria-hidden="true"></span>
       <span class="portal-label">Мост поддержки<br>Личный кабинет</span>
       <div class="header-actions">
-        <a class="back-site" href="{{ public_site_url|default:'https://vsvld778.github.io/safspp-website/' }}">На сайт <span aria-hidden="true">↗</span></a>
+        <a class="back-site" href="{{ public_site_url|default:'https://vsvld778.github.io/safspp-website/' }}">На сайт</a>
         {% if user.is_authenticated %}
           <span class="account-name">{{ user.display_name|default:user.email }}</span>
           <form class="logout-form" method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="text-button" type="submit">Выйти</button></form>
         {% endif %}
       </div>
+      <button class="theme-toggle" type="button" data-theme-open hidden aria-label="Оформление" title="Оформление"></button>
       {% if user.is_authenticated %}<button class="menu-toggle" data-menu-toggle aria-expanded="false" aria-controls="portal-navigation" aria-label="Открыть меню" type="button"><span></span><span></span><span></span></button>{% endif %}
     </div>
   </header>
