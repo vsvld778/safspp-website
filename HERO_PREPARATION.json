@@ -1,0 +1,22 @@
+{
+  "sourceCommit": "a810c8701f5f71f9f7df0de494034fd97d7a6bd3",
+  "asset": "assets/hero-people.webp",
+  "width": 1672,
+  "height": 941,
+  "expectedBytes": 227908,
+  "status": "Draft: image upload and responsive visual review pending. Do not deploy until the referenced image exists.",
+  "checks": {
+    "syntaxScripts": 1,
+    "languages": [
+      "ru",
+      "en",
+      "tg",
+      "uz",
+      "kk",
+      "ky",
+      "be",
+      "hi"
+    ],
+    "oldHeroReferenceRemoved": true
+  }
+}
