@@ -31,7 +31,11 @@ if (( WITH_WWW )); then
   DOMAINS+=(www.migrantmost.ru)
   openssl x509 -in "$CERT/fullchain.pem" -noout -checkhost www.migrantmost.ru >/dev/null
 fi
-python3 - "${DOMAINS[@]}" <<'PY'
+if (( DNS_VERIFIED )); then
+  # A stale VPS resolver is tolerated only after these independent live checks.
+  python3 "$DEPLOY/verify-domain-dns.py" "${DOMAINS[@]}"
+else
+  python3 - "${DOMAINS[@]}" <<'PY'
 import socket, sys
 for domain in sys.argv[1:]:
     try:
@@ -42,8 +46,9 @@ for domain in sys.argv[1:]:
         raise SystemExit('DNS for ' + domain + ' must resolve exclusively to 194.58.103.10; check stale A/AAAA records first')
 print('Local DNS resolves all selected names to the expected VPS.')
 PY
+fi
 if [[ "$MODE" == --check ]]; then
-  echo 'Certificate names, expiry and local DNS checks passed. No settings changed.'
+  echo 'Certificate names, expiry and selected DNS checks passed. No settings changed.'
   echo 'After independently confirming ownership and public DNS, run --apply --dns-verified (plus --www only if verified).'
   exit 0
 fi

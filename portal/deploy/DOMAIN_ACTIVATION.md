@@ -8,11 +8,28 @@ domain, changes registrar records, requests a certificate or opens registration.
 ## Before activation
 
 The administrator must independently confirm control of `migrantmost.ru` and
-that public DNS points to `194.58.103.10`. The script also checks the server's
-local DNS resolution, but that is a consistency check, not proof of ownership.
+that public DNS points to `194.58.103.10`. Without `--dns-verified`, the script
+requires strict local DNS resolution to this IP. DNS answers are a consistency
+check, not proof of domain ownership.
 Remove stale A/AAAA records that direct visitors to another server. This prepared
 deployment uses IPv4; it deliberately refuses activation while any selected name
 resolves to an unconfigured IPv6 address.
+
+When `--dns-verified` is supplied, the script additionally makes its own direct
+TCP DNS queries to **ns1.reg.ru, ns2.reg.ru and 1.1.1.1**, requesting both A and AAAA
+for every selected name. All responses must be NOERROR; both REG responses must
+be authoritative. Every A answer must contain exclusively `194.58.103.10`; AAAA
+answers must be empty. CNAMEs, referrals, disagreement, malformed replies and
+timeouts fail closed. Each query has a five-second process deadline, with six
+parallel workers for at most twelve queries. This guard requires `dig` (Ubuntu
+package `dnsutils`); it does not install packages automatically.
+
+A stale cache in the VPS's local resolver therefore does **not** block
+`--check --dns-verified` or activation after every independent query succeeds.
+The script never edits resolver settings or `/etc/hosts`. If any authoritative or
+Cloudflare answer is still wrong/unavailable, wait or correct DNS; the flag cannot
+bypass these checks. TLS verification and the domain/IP health checks remain
+unchanged.
 
 Issue a certificate named **`safspp-domain`** for `migrantmost.ru`, with files:
 
@@ -49,11 +66,14 @@ Run as root, from a reviewed checkout:
 
 ```sh
 bash /opt/safspp/source/portal/deploy/activate-domain.sh --check
+# If the VPS resolver still caches the old destination, after public DNS verification:
+bash /opt/safspp/source/portal/deploy/activate-domain.sh --check --dns-verified
 # Only after independently confirming ownership/public DNS:
 bash /opt/safspp/source/portal/deploy/activate-domain.sh --apply --dns-verified
 ```
 
-`--check` is read-only and validates certificate names/expiry and local DNS.
+`--check` is read-only and validates certificate names/expiry and local DNS;
+adding `--dns-verified` selects the independent three-server DNS guard above.
 `--apply` requires the explicit `--dns-verified` flag. It validates Nginx before
 reloading, preserves a restricted backup of the previous configuration, updates
 the environment atomically, checks Django and health, and automatically restores
@@ -84,6 +104,8 @@ include both names. After that:
 
 ```sh
 bash /opt/safspp/source/portal/deploy/activate-domain.sh --check --www
+# With a stale VPS resolver, independently verified public DNS can be checked with:
+bash /opt/safspp/source/portal/deploy/activate-domain.sh --check --dns-verified --www
 bash /opt/safspp/source/portal/deploy/activate-domain.sh --apply --dns-verified --www
 ```
 
