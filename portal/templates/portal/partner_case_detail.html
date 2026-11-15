@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block title %}Совместная работа · {{ case.reference }}{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{% url 'partner_dashboard' %}">Кабинет организации</a><span aria-hidden="true">/</span>{{ case.reference }}</p>
+<div class="detail-heading"><p class="eyebrow">Совместная работа</p><h1>Обращение {{ case.reference }}</h1></div>
+<div class="intro-note"><span class="note-symbol" aria-hidden="true">i</span><p><strong>Сообщения видны организации, заявителю и координатору.</strong> Организации доступны только сведения и сообщения, предоставленные для совместной работы.</p></div>
+<div class="case-detail-grid">
+  <div>
+    {% if case.partner_next_step %}<div class="next-step"><strong>Следующий шаг организации</strong><p>{{ case.partner_next_step }}</p></div>{% endif %}
+    <section class="panel case-summary"><h2>Задача для организации</h2><p class="summary-description">{% if case.partner_summary %}{{ case.partner_summary }}{% else %}Координатор пока не добавил описание совместной задачи.{% endif %}</p></section>
+    <div class="section-heading"><h2>Общая переписка</h2></div>
+    {% if case_messages %}<div class="thread" aria-label="Переписка организации">{% for message in case_messages %}<article class="thread-item{% if message.is_own %} thread-item-mine{% endif %}"><div class="thread-header"><span class="thread-author">{{ message.author_display }}</span><time class="thread-time" datetime="{{ message.created_at|date:'c' }}">{{ message.created_at|date:'d.m.Y, H:i' }}</time></div><p class="thread-body">{{ message.body }}</p></article>{% endfor %}</div>{% else %}<p class="thread-empty">Сообщений пока нет. Здесь можно уточнить детали совместной задачи.</p>{% endif %}
+    {% if case.status == 'resolved' or case.status == 'closed' %}<div class="intro-note"><span class="note-symbol" aria-hidden="true">✓</span><p>Обращение завершено. История совместной работы сохранена.</p></div>{% elif form %}<section class="panel reply-panel" aria-labelledby="partner-reply-title"><h2 id="partner-reply-title">Сообщение участникам обращения</h2><p class="small muted">Его увидят заявитель, координатор и участники вашей организации с доступом к обращению.</p><form method="post" action="{% url 'partner_case_detail' case.public_id %}">{% csrf_token %}{% include 'components/form_fields.html' %}<div class="form-actions"><button class="button" type="submit">Отправить сообщение <span aria-hidden="true">→</span></button></div></form></section>{% endif %}
+  </div>
+  <aside class="aside-guide" aria-label="Информация о задаче"><dl class="case-facts"><div><dt>Номер обращения</dt><dd>{{ case.reference }}</dd></div><div><dt>Статус</dt><dd><span class="badge badge-{{ case.status }}">{{ case.get_status_display }}</span></dd></div><div><dt>Обновлено</dt><dd>{{ case.updated_at|date:'d.m.Y, H:i' }}</dd></div></dl></aside>
+</div>
+{% endblock %}

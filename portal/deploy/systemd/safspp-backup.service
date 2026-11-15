@@ -1,0 +1,20 @@
+[Unit]
+Description=SAFSPP daily local backup and expired-data cleanup
+After=postgresql.service
+Requires=postgresql.service
+
+[Service]
+Type=oneshot
+User=root
+Group=root
+ExecStart=/usr/local/sbin/safspp-backup
+ExecStartPost=/usr/local/sbin/safspp-manage prune_portal_data
+UMask=0077
+Nice=10
+IOSchedulingClass=best-effort
+IOSchedulingPriority=7
+TimeoutStartSec=20min
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=full
+NoNewPrivileges=true

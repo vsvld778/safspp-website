@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Создать кабинет{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <section class="auth-story" aria-labelledby="signup-heading">
+    <p class="eyebrow">Мост поддержки</p>
+    <h1 id="signup-heading">Один кабинет.<br>Ваша история<br>обращений.</h1>
+    <p>Сохраните связь со специалистом и возвращайтесь к разговору, когда вам удобно.</p>
+    <ol class="auth-features">
+      <li><span class="feature-number" aria-hidden="true">01</span><div><strong>Только необходимые сведения</strong><p>На этом этапе нужны имя для общения и email. Паспортные данные не запрашиваются.</p></div></li>
+      <li><span class="feature-number" aria-hidden="true">02</span><div><strong>Понятная переписка</strong><p>Выберите удобный язык общения. Специалист увидит ваше предпочтение.</p></div></li>
+      <li><span class="feature-number" aria-hidden="true">03</span><div><strong>Доступ организаций — отдельно</strong><p>Регистрация кабинета сама по себе не даёт доступ к обращениям других людей.</p></div></li>
+    </ol>
+  </section>
+  <section class="auth-card" aria-labelledby="signup-title">
+    <h2 id="signup-title">Создать кабинет</h2>
+    <p>{% if registration_mode == 'invite' %}Регистрация доступна по приглашению. Введите полученный код.{% else %}Заполните поля ниже, чтобы начать.{% endif %}</p>
+    <form method="post" action="{% url 'signup' %}">
+      {% csrf_token %}
+      {% include 'components/form_fields.html' %}
+      <button class="button" type="submit">Создать кабинет <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-alt">Уже зарегистрированы? <a href="{% url 'login' %}">Войти</a></p>
+    <div class="auth-note">Email используется для входа. Не передавайте пароль другим людям.</div>
+  </section>
+</div>
+{% endblock %}

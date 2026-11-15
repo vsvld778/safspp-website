@@ -1,0 +1,3 @@
+{% extends 'base.html' %}
+{% block title %}Доступ ограничен{% endblock %}
+{% block content %}<div class="error-page"><p class="eyebrow">Мост поддержки</p><h1>Доступ к странице ограничен</h1><p>Возможно, вы вошли в другой кабинет или доступ к этой странице изменился.</p><a class="button" href="{% if user.is_authenticated %}{% url 'dashboard' %}{% else %}{% url 'login' %}{% endif %}">Вернуться в кабинет</a></div>{% endblock %}

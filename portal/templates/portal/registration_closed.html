@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Регистрация пока закрыта{% endblock %}
+{% block content %}
+<div class="error-page">
+  <p class="eyebrow">Мост поддержки</p>
+  <h1>Кабинет готовится<br>к открытию</h1>
+  <p>Самостоятельная регистрация пока закрыта. Если координатор уже создал для вас учётную запись, используйте полученные данные для входа.</p>
+  <a class="button" href="{% url 'login' %}">Перейти ко входу</a>
+  <p class="auth-alt"><a href="{{ public_site_url|default:'https://vsvld778.github.io/safspp-website/' }}">Вернуться на сайт программы</a></p>
+</div>
+{% endblock %}

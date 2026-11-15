@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block title %}Новое обращение{% endblock %}
+{% block content %}
+<p class="breadcrumb"><a href="{% url 'dashboard' %}">Мои обращения</a><span aria-hidden="true">/</span>Новое обращение</p>
+<div class="page-heading"><div><p class="eyebrow">Первый шаг</p><h1>Расскажите о ситуации</h1><p>Опишите вопрос своими словами. Можно начать с самого важного, а детали уточнить позже.</p></div></div>
+{% if intake_mode == 'disabled' %}
+  <section class="panel panel-accent"><h2>Приём обращений пока закрыт</h2><p class="muted">Вернитесь в кабинет, чтобы посмотреть историю и ответы.</p><a class="button button-secondary" href="{% url 'dashboard' %}">К моим обращениям</a></section>
+{% else %}
+<div class="form-layout">
+  <section class="panel panel-accent form-panel" aria-labelledby="case-form-title">
+    <h2 id="case-form-title">Ваш вопрос</h2><p>Поля со звёздочкой обязательны.</p>
+    <form method="post" action="{% url 'case_create' %}">
+      {% csrf_token %}{% include 'components/form_fields.html' %}
+      <div class="form-actions"><button class="button" type="submit">{% if intake_mode == 'test' %}Создать тестовое обращение{% else %}Отправить обращение{% endif %}<span aria-hidden="true">→</span></button><a href="{% url 'dashboard' %}" class="small">Отмена</a></div>
+      <p class="form-footer-note">После отправки вы увидите номер обращения и сможете продолжить переписку в кабинете.</p>
+    </form>
+  </section>
+  <aside class="aside-guide"><h2>Что написать</h2><ol><li>Что произошло и какой вопрос нужно решить.</li><li>В каком городе вы находитесь или планируете находиться.</li><li>Есть ли важная дата или срок.</li></ol><h3>Достаточно описания</h3><p>Сканы паспорта, номера документов и банковские реквизиты здесь не нужны.</p><h3>Уже писали об этом?</h3><p>Добавьте сообщение в существующее обращение — так специалист увидит всю историю.</p></aside>
+</div>
+{% endif %}
+{% endblock %}

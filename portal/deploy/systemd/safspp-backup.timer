@@ -1,0 +1,11 @@
+[Unit]
+Description=Daily SAFSPP backup
+
+[Timer]
+OnCalendar=*-*-* 03:35:00 Europe/Moscow
+RandomizedDelaySec=10min
+Persistent=true
+Unit=safspp-backup.service
+
+[Install]
+WantedBy=timers.target

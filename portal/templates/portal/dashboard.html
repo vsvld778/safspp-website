@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+{% block title %}Мои обращения{% endblock %}
+{% block content %}
+<div class="page-heading">
+  <div><p class="eyebrow">Личный кабинет</p><h1>Мои обращения</h1><p>Здесь сохраняются ваши вопросы и переписка со специалистами.</p></div>
+  {% if intake_mode != 'disabled' %}<a class="button" href="{% url 'case_create' %}"><span class="button-icon" aria-hidden="true">+</span>Новое обращение</a>{% endif %}
+</div>
+{% if intake_mode == 'disabled' %}<div class="intro-note"><span class="note-symbol" aria-hidden="true">i</span><p><strong>Приём новых обращений пока закрыт.</strong> Вы можете просматривать историю и ранее опубликованные ответы.</p></div>{% elif cases %}<div class="intro-note"><span class="note-symbol" aria-hidden="true">i</span><p>Есть дополнение к вопросу? Откройте существующее обращение и напишите сообщение — создавать новое не нужно.</p></div>{% endif %}
+{% if cases %}
+  <div class="stats-strip" aria-label="Сводка по обращениям"><div><strong>{{ stats.total }}</strong><span>Всего</span></div><div><strong>{{ stats.active }}</strong><span>Открыто</span></div><div><strong>{{ stats.waiting }}</strong><span>Ждут вашего ответа</span></div><div><strong>{{ stats.resolved }}</strong><span>Завершено</span></div></div>
+  <div class="section-heading"><h2>История обращений</h2></div>
+  <div class="case-list">{% for case in cases %}{% include 'components/case_card.html' %}{% endfor %}</div>
+{% else %}
+  <section class="empty-state">
+    <div class="empty-icon" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 3h10l4 4v14H5zM15 3v5h4M8 12h8M8 16h5"/></svg></div>
+    <h2>Ваше первое обращение</h2>
+    <p>{% if intake_mode == 'disabled' %}Пока здесь пусто. После открытия приёма вы сможете описать ситуацию и следить за ответами в кабинете.{% else %}Расскажите, с чем нужна помощь. У обращения появится номер, а ответы будут сохраняться здесь.{% endif %}</p>
+    {% if intake_mode != 'disabled' %}<a class="button" href="{% url 'case_create' %}">Описать ситуацию <span aria-hidden="true">→</span></a>{% endif %}
+  </section>
+{% endif %}
+<div class="support-strip"><div><strong>Своими словами</strong><p>Для первого сообщения не нужно разбираться в юридических терминах.</p></div><div><strong>Без сканов документов</strong><p>Не добавляйте паспортные номера и банковские реквизиты в описание.</p></div><div><strong>В одном обращении</strong><p>Все уточнения по одной ситуации удобно вести в общей переписке.</p></div></div>
+{% endblock %}

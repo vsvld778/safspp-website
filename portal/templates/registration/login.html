@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block title %}Вход в кабинет{% endblock %}
+{% block content %}
+<div class="auth-shell">
+  <section class="auth-story" aria-labelledby="auth-title">
+    <p class="eyebrow">Мост поддержки</p>
+    <h1 id="auth-title">Помощь начинается<br>с разговора.</h1>
+    <p>Ваши обращения, ответы специалистов и следующие шаги — в одном месте.</p>
+    <ol class="auth-features">
+      <li><span class="feature-number" aria-hidden="true">01</span><div><strong>Расскажите о ситуации</strong><p>Опишите вопрос своими словами. Для первого обращения сканы документов не нужны.</p></div></li>
+      <li><span class="feature-number" aria-hidden="true">02</span><div><strong>Следите за обращением</strong><p>В кабинете сохраняются номер обращения, его статус и переписка.</p></div></li>
+      <li><span class="feature-number" aria-hidden="true">03</span><div><strong>Продолжайте разговор</strong><p>Уточняйте детали в том же обращении, чтобы вся история оставалась рядом.</p></div></li>
+    </ol>
+  </section>
+  <section class="auth-card" aria-labelledby="login-title">
+    <p class="eyebrow">Личный кабинет</p>
+    <h2 id="login-title">Войти</h2>
+    <p>Используйте email и пароль, указанные при регистрации.</p>
+    <form method="post" action="{% url 'login' %}">
+      {% csrf_token %}
+      {% if next %}<input type="hidden" name="next" value="{{ next }}">{% endif %}
+      {% include 'components/form_fields.html' %}
+      <button class="button" type="submit">Войти в кабинет <span aria-hidden="true">→</span></button>
+    </form>
+    <p class="auth-alt">Ещё нет кабинета? <a href="{% url 'signup' %}">{% if registration_mode == 'closed' %}О регистрации{% else %}Создать кабинет{% endif %}</a></p>
+    <div class="auth-note"><strong>Представляете организацию?</strong>Войдите в свой кабинет. Раздел организации доступен после подтверждения доступа координатором.</div>
+  </section>
+</div>
+{% endblock %}
