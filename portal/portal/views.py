@@ -134,6 +134,9 @@ def partner_dashboard(request):
 @require_http_methods(["GET", "POST"])
 def partner_case_detail(request, public_id):
     case = get_object_or_404(partner_cases(request.user), public_id=public_id)
+    if request.method == "POST" and not case.partner_organization.memberships.filter(
+            user=request.user, is_active=True, role__in=["manager", "editor"]).exists():
+        raise PermissionDenied
     form = CaseMessageForm(request.POST or None)
     if request.method == "POST" and add_message(request, case, CaseMessage.Audience.PARTNER, form):
         return redirect("partner_case_detail", public_id=case.public_id)

@@ -6,4 +6,4 @@ def approved_organizations(user):
     return Organization.objects.filter(is_approved=True, memberships__user=user, memberships__is_active=True)
 
 def partner_cases(user):
-    return SupportCase.objects.filter(partner_organization__in=approved_organizations(user), partner_sharing_approved=True).exclude(partner_consent_record="").exclude(partner_summary="")
+    return SupportCase.objects.filter(partner_organization__in=approved_organizations(user), partner_sharing_approved=True).exclude(partner_organization__kind__in=[Organization.Kind.EMPLOYER, Organization.Kind.STAFFING]).exclude(partner_consent_record="").exclude(partner_summary="")

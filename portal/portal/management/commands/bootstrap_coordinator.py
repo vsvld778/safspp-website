@@ -29,7 +29,13 @@ class Command(BaseCommand):
             raise CommandError("; ".join(exc.messages)) from exc
         with transaction.atomic():
             group, _ = Group.objects.get_or_create(name="Координатор фонда")
-            codenames = ["view_supportcase", "change_supportcase", "view_casemessage", "add_casemessage", "view_caseevent", "view_organization"]
+            codenames = [
+                "view_supportcase", "change_supportcase", "view_casemessage", "add_casemessage",
+                "view_caseevent", "view_organization", "view_organizationworkspace",
+                "view_organizationrequest", "change_organizationrequest",
+                "view_organizationrequestmessage", "add_organizationrequestmessage",
+                "view_organizationevent",
+            ]
             group.permissions.set(Permission.objects.filter(content_type__app_label="portal", codename__in=codenames))
             user = User.objects.create_user(email=email, password=password, display_name=options["name"], is_staff=True)
             user.groups.add(group)

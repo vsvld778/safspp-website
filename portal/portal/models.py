@@ -64,6 +64,10 @@ class Organization(models.Model):
     class Kind(models.TextChoices):
         NGO = "ngo", "Фонд / НКО"
         EMPLOYER = "employer", "Работодатель"
+        STAFFING = "staffing", "Кадровое агентство"
+        COMMUNITY = "community", "Диаспора / сообщество"
+        DONOR = "donor", "Благотворитель"
+        REPRESENTATION = "representation", "Представительство"
         PARTNER = "partner", "Партнёр"
     name = models.CharField("Название", max_length=200)
     kind = models.CharField("Тип", max_length=16, choices=Kind.choices, default=Kind.PARTNER)
@@ -78,9 +82,14 @@ class Organization(models.Model):
         return self.name
 
 class OrganizationMembership(models.Model):
+    class Role(models.TextChoices):
+        MANAGER = "manager", "Администратор организации"
+        EDITOR = "editor", "Координатор организации"
+        VIEWER = "viewer", "Наблюдатель"
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name="memberships")
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="memberships")
     is_active = models.BooleanField("Доступ включён", default=True)
+    role = models.CharField("Роль", max_length=16, choices=Role.choices, default=Role.EDITOR)
     created_at = models.DateTimeField(auto_now_add=True)
 
     class Meta:
@@ -148,6 +157,8 @@ class SupportCase(models.Model):
         if self.partner_sharing_approved:
             if not self.partner_organization_id or not self.partner_organization.is_approved:
                 raise ValidationError({"partner_organization": "Выберите проверенную организацию."})
+            if self.partner_organization.kind in {Organization.Kind.EMPLOYER, Organization.Kind.STAFFING}:
+                raise ValidationError({"partner_organization": "Работодателям и кадровым агентствам доступ к личным обращениям не предоставляется."})
             if not self.partner_consent_record.strip():
                 raise ValidationError({"partner_consent_record": "Нужно зафиксированное согласие на передачу."})
             if not self.partner_summary.strip():
@@ -212,3 +223,6 @@ class RateLimitBucket(models.Model):
     key = models.CharField(max_length=64, unique=True)
     count = models.PositiveIntegerField(default=0)
     expires_at = models.DateTimeField(db_index=True)
+
+# Keep the organization workspace separate from applicants' private case records.
+from .organization_models import (OrganizationWorkspace, OrganizationRequest, OrganizationRequestMessage, OrganizationEvent)  # noqa: E402,F401

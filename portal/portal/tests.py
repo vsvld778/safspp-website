@@ -58,7 +58,12 @@ class PortalAccessTests(TestCase):
 
     def test_partner_only_sees_explicit_shared_projection(self):
         self.login_as(self.partner)
-        for url in [reverse("partner_dashboard"), reverse("partner_case_detail", args=[self.case.public_id])]:
+        # The organization dashboard is now a shell; its data is delivered by the API.
+        self.assertEqual(self.client.get(reverse("partner_dashboard")).status_code, 200)
+        session = self.client.get(reverse("organization_session")).json()
+        self.assertEqual(session["cases"][0]["summary"], "Общая задача для партнёра")
+        self.assertEqual(set(session["cases"][0]), {"id", "reference", "status", "statusLabel", "summary", "nextStep", "updatedAt", "isTest", "url"})
+        for url in [reverse("partner_case_detail", args=[self.case.public_id])]:
             response = self.client.get(url)
             self.assertContains(response, "Общая задача для партнёра")
             for private in ["Личное описание ситуации", "Секретное название", "alice@example.test", "Приватное сообщение заявителя", "Внутренняя заметка"]:
@@ -204,8 +209,11 @@ class PortalAccessTests(TestCase):
     def test_pending_partner_page_exposes_no_case_data(self):
         self.login_as(self.bob)
         response = self.client.get(reverse("partner_dashboard"))
-        self.assertContains(response, "ещё не подключён")
+        self.assertEqual(response.status_code, 200)
         self.assertNotContains(response, "Общая задача для партнёра")
+        api_response = self.client.get(reverse("organization_session"))
+        self.assertEqual(api_response.status_code, 403)
+        self.assertEqual(api_response.json()["error"], "organization_forbidden")
 
 @override_settings(PORTAL_INTAKE_MODE="test", REGISTRATION_MODE="invite",
     REGISTRATION_INVITE_SHA256=hashlib.sha256(b"synthetic-test-invitation").hexdigest())
