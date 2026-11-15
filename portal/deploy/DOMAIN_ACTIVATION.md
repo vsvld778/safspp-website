@@ -21,8 +21,9 @@ Issue a certificate named **`safspp-domain`** for `migrantmost.ru`, with files:
 /etc/letsencrypt/live/safspp-domain/privkey.pem
 ```
 
-The ACME webroot is `/var/www/acme`. After DNS verification, explicitly enable
-the prepared **HTTP-only ACME** server block before certificate issuance:
+The ACME webroot is `/var/www/acme`. After DNS verification for **both**
+`migrantmost.ru` and `www.migrantmost.ru`, explicitly enable the prepared
+**HTTP-only ACME** server block before certificate issuance:
 
 ```sh
 install -m 0644 /opt/safspp/source/portal/deploy/nginx/safspp-domain-acme.conf /etc/nginx/sites-available/safspp-domain-acme.conf
@@ -32,8 +33,9 @@ nginx -t && systemctl reload nginx
 
 This serves only challenge files; all other paths return plain-text 503, without
 forms or cookies. Verify a harmless temporary challenge through the public
-hostname before issuance. If also preparing www, add `www.migrantmost.ru` to this
-temporary `server_name` only after separately verifying its DNS. Certificate
+hostname before issuance. The prepared temporary `server_name` contains both
+names, so test the challenge URL through both. For an apex-only deployment whose
+www DNS is not yet verified, remove www from that temporary block first. Certificate
 issuance remains an administrator action. The activation script removes only this
 exact owned staging symlink on success and restores it on rollback. Do not enable
 an HTTPS server block before a valid matching certificate exists.
