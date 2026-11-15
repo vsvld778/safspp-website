@@ -413,19 +413,29 @@ dialog { border: 1px solid #cbd5bd; border-radius: 24px 24px 8px 8px; background
 }
 </style>
 
+<style>
+/* Keep the official name in the same three lines at every width. */
+.brand-line{display:block;white-space:nowrap;overflow-wrap:normal;word-break:normal}
+.brand-name{white-space:normal;text-wrap:initial}
+@media(max-width:560px){.header .brand{gap:9px}.header .brand img{width:44px;height:44px;flex-basis:44px}.header .brand-name{font-size:12px;line-height:1.4;max-width:none;width:auto}.footer .brand-name{font-size:12px;line-height:1.4}}
+</style>
 </head>
 <body>
 <a class="skip" href="#main">Перейти к содержанию</a>
 <div class="launch-note">Социально-правовая поддержка трудовых мигрантов в России <a href="#about">О фонде</a></div>
 <header class="header"><div class="shell header-row">
-<a class="brand" href="#home" aria-label="САФСПП — главная"><img src="assets/logo-mark.webp" alt="" width="46" height="46"><span class="brand-name">Среднеазиатский Фонд Социально-Правовой Поддержки</span></a>
+<a class="brand" href="#home" aria-label="САФСПП — главная"><img src="assets/logo-mark.webp" alt="" width="46" height="46"><span class="brand-name" data-i18n-skip><span class="brand-line">Среднеазиатский Фонд</span>
+<span class="brand-line">Социально-Правовой</span>
+<span class="brand-line">Поддержки</span></span></a>
 <div class="language-picker"><div class="language-flags" role="group" aria-label="Язык сайта"><button type="button" class="language-flag" data-language="ru" lang="ru" aria-label="Русский" title="Русский" aria-pressed="true" data-i18n-skip><span aria-hidden="true">🇷🇺</span></button><button type="button" class="language-flag" data-language="en" lang="en" aria-label="English" title="English" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇬🇧</span></button><button type="button" class="language-flag" data-language="tg" lang="tg" aria-label="Тоҷикӣ" title="Тоҷикӣ" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇹🇯</span></button><button type="button" class="language-flag" data-language="uz" lang="uz" aria-label="O‘zbekcha" title="O‘zbekcha" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇺🇿</span></button><button type="button" class="language-flag" data-language="kk" lang="kk" aria-label="Қазақша" title="Қазақша" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇰🇿</span></button><button type="button" class="language-flag" data-language="ky" lang="ky" aria-label="Кыргызча" title="Кыргызча" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇰🇬</span></button><button type="button" class="language-flag" data-language="be" lang="be" aria-label="Беларуская" title="Беларуская" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇧🇾</span></button><button type="button" class="language-flag" data-language="hi" lang="hi" aria-label="हिन्दी" title="हिन्दी" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇮🇳</span></button></div></div>
 <button class="menu-toggle" aria-label="Открыть меню" aria-expanded="false" aria-controls="navigation">Меню <span aria-hidden="true">☰</span></button>
 <nav id="navigation" aria-label="Главное меню"><a href="#help">Нужна помощь</a><a href="#guides">Памятки</a><a href="#about">О фонде</a><a href="#partners">Партнёрам</a></nav>
 <a class="button button-small header-action" href="#request">Подготовить обращение</a>
 </div></header>
 <main id="main" tabindex="-1"></main>
-<footer class="footer"><div class="shell"><div class="footer-top"><a class="brand brand-light" href="#home"><img src="assets/logo-mark.webp" alt="" width="46" height="46"><span class="brand-name">Среднеазиатский Фонд Социально-Правовой Поддержки</span></a><p>Уважение к человеку.<br>Понятная помощь. Законный труд.</p><div><a href="#about">О программе</a><a href="#partners">Сотрудничество</a><a href="#contacts">Помощь и полезные контакты</a></div></div><div class="footer-bottom"><span>© 2026 ОФ «САФСПП»</span><button class="text-button" data-privacy>О данных и конфиденциальности</button><span>Поддержка работников и их семей</span></div></div></footer>
+<footer class="footer"><div class="shell"><div class="footer-top"><a class="brand brand-light" href="#home"><img src="assets/logo-mark.webp" alt="" width="46" height="46"><span class="brand-name" data-i18n-skip><span class="brand-line">Среднеазиатский Фонд</span>
+<span class="brand-line">Социально-Правовой</span>
+<span class="brand-line">Поддержки</span></span></a><p>Уважение к человеку.<br>Понятная помощь. Законный труд.</p><div><a href="#about">О программе</a><a href="#partners">Сотрудничество</a><a href="#contacts">Помощь и полезные контакты</a></div></div><div class="footer-bottom"><span>© 2026 ОФ «САФСПП»</span><button class="text-button" data-privacy>О данных и конфиденциальности</button><span>Поддержка работников и их семей</span></div></div></footer>
 <dialog id="detail-dialog" aria-labelledby="dialog-title"><div class="dialog-bar"><span>САФСПП · полезная информация</span><button class="close-button" aria-label="Закрыть окно">×</button></div><div id="dialog-content"></div></dialog>
 <noscript><p class="shell">Для выбора ситуации включите JavaScript. Официальные сведения о трудовых правах: <a href="https://онлайнинспекция.рф/">Онлайнинспекция.рф</a>.</p></noscript>
 <script>// Информационные материалы фонда. Источники проверены 15.11.2026.
@@ -718,10 +728,12 @@ window.SAF_LOCALES={"ru":{"s001":"САФСПП — поддержка трудо
   return value;
  }
  function setMenuLabel(open){document.querySelector('.menu-toggle')?.setAttribute('aria-label',t(open?'Закрыть меню':'Открыть меню'))}
+ const brandLines={"ru":["Среднеазиатский Фонд","Социально-Правовой","Поддержки"],"en":["Central Asian Foundation","for Social and Legal","Support"],"tg":["Фонди Осиёи Марказии","дастгирии иҷтимоӣ","ва ҳуқуқӣ"],"uz":["O‘rta Osiyo","ijtimoiy-huquqiy","qo‘llab-quvvatlash fondi"],"kk":["Орта Азиялық","Әлеуметтік-Құқықтық","Қолдау Қоры"],"ky":["Орто Азиялык","Социалдык-Укуктук","Колдоо Фонду"],"be":["Сярэднеазіяцкі фонд","сацыяльна-прававой","падтрымкі"],"hi":["मध्य एशियाई","सामाजिक एवं कानूनी","सहायता फाउंडेशन"]};
+ function renderBrand(){for(const element of document.querySelectorAll(".brand-name")){element.replaceChildren();brandLines[language].forEach((line,index)=>{if(index)element.append(document.createTextNode("\n"));const span=document.createElement("span");span.className="brand-line";span.textContent=line;element.append(span)})}}
  function initialize(onChange){
   const buttons=[...document.querySelectorAll('.language-flag')];
   const description=document.querySelector('meta[name="description"]'),descriptionSource=description?.content;
-  const apply=()=>{document.documentElement.lang=language;for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.language===language));translateTree(document.body);if(description)description.content=t(descriptionSource);setMenuLabel(false)};
+  const apply=()=>{document.documentElement.lang=language;for(const button of buttons)button.setAttribute('aria-pressed',String(button.dataset.language===language));translateTree(document.body);renderBrand();if(description)description.content=t(descriptionSource);setMenuLabel(false)};
   const setLanguage=(next,trigger)=>{if(!supported.includes(next))return;if(next===language){trigger?.focus();return}language=next;try{localStorage.setItem(storageKey,language)}catch(_){}apply();onChange();trigger?.focus()};
   for(const button of buttons)button.addEventListener('click',()=>setLanguage(button.dataset.language,button));
   apply();
@@ -777,4 +789,5 @@ document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();
 I18N.initialize(()=>{const form=document.getElementById('draft-form');if(form)draft=Object.fromEntries(new FormData(form));content=I18N.localizeData(window.SAF_CONTENT);route()});
 window.addEventListener('hashchange',route);route();
 </script></body></html>
+
 
