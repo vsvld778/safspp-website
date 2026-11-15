@@ -420,7 +420,8 @@ dialog { border: 1px solid #cbd5bd; border-radius: 24px 24px 8px 8px; background
 @media(max-width:560px){.header .brand{gap:9px}.header .brand img{width:44px;height:44px;flex-basis:44px}.header .brand-name{font-size:12px;line-height:1.4;max-width:none;width:auto}.footer .brand-name{font-size:12px;line-height:1.4}}
 </style>
 <style>
-/* Section links stay visible directly beneath the language flags on mobile. */
+/* Tablet links stay visible; phones use a disclosure beneath the language flags. */
+.header .menu-toggle{display:none}
 @media(max-width:1180px){
   .header-row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px 24px;padding-block:14px}
   .header .brand{grid-column:1;grid-row:1;max-width:none;width:auto}
@@ -429,10 +430,17 @@ dialog { border: 1px solid #cbd5bd; border-radius: 24px 24px 8px 8px; background
   .header nav a{display:flex;align-items:center;min-height:44px;max-width:none;padding:6px 0;font-size:14px;line-height:1.35;white-space:normal}
 }
 @media(max-width:720px){
-  .header-row{grid-template-columns:minmax(0,1fr);gap:12px}
+  .header-row{grid-template-columns:minmax(0,1fr) 44px;gap:12px}
   .header .brand{grid-column:1;grid-row:1}
-  .language-picker{grid-column:1;grid-row:2;width:100%}
-  .header nav{grid-column:1;grid-row:3;justify-content:space-between;gap:4px 16px}
+  .language-picker{grid-column:1/-1;grid-row:2;width:100%}
+  .header .menu-toggle{display:flex;grid-column:2;grid-row:1;align-self:center;justify-self:end;align-items:center;justify-content:center;width:44px;height:44px;min-width:44px;padding:10px;margin:0;border:1px solid #a9b9ac;border-radius:6px;background:#fffdf7;color:var(--navy);cursor:pointer}
+  .header .menu-toggle svg{display:block;width:24px;height:24px;flex:none}
+  .header .menu-toggle:hover,.header .menu-toggle[aria-expanded="true"]{background:var(--pale);border-color:var(--emerald)}
+  .header .menu-toggle:focus-visible{outline:3px solid var(--garnet);outline-offset:3px}
+  .header #navigation{display:none;grid-column:1/-1;grid-row:3;grid-template-columns:minmax(0,1fr);gap:0;width:100%;margin:0;padding:4px 14px;border:1px solid var(--line);border-radius:8px;background:#fffdf7}
+  .header #navigation.is-open{display:grid}
+  .header #navigation a{min-height:44px;padding:12px 0;font-size:15px;line-height:1.4;border-bottom:1px solid var(--line)}
+  .header #navigation a:last-child{border-bottom:0}
 }
 @media(max-width:560px){
   .header nav{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 16px;padding-top:4px}
@@ -700,6 +708,7 @@ dialog { border: 1px solid #cbd5bd; border-radius: 24px 24px 8px 8px; background
 <span class="brand-line">Социально-Правовой</span>
 <span class="brand-line">Поддержки</span></span></a></div>
 <div class="language-picker"><div class="language-flags" role="group" aria-label="Язык сайта"><button type="button" class="language-flag" data-language="ru" lang="ru" aria-label="Русский" title="Русский" aria-pressed="true" data-i18n-skip><span aria-hidden="true">🇷🇺</span></button><button type="button" class="language-flag" data-language="en" lang="en" aria-label="English" title="English" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇬🇧</span></button><button type="button" class="language-flag" data-language="tg" lang="tg" aria-label="Тоҷикӣ" title="Тоҷикӣ" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇹🇯</span></button><button type="button" class="language-flag" data-language="uz" lang="uz" aria-label="O‘zbekcha" title="O‘zbekcha" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇺🇿</span></button><button type="button" class="language-flag" data-language="kk" lang="kk" aria-label="Қазақша" title="Қазақша" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇰🇿</span></button><button type="button" class="language-flag" data-language="ky" lang="ky" aria-label="Кыргызча" title="Кыргызча" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇰🇬</span></button><button type="button" class="language-flag" data-language="be" lang="be" aria-label="Беларуская" title="Беларуская" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇧🇾</span></button><button type="button" class="language-flag" data-language="hi" lang="hi" aria-label="हिन्दी" title="हिन्दी" aria-pressed="false" data-i18n-skip><span aria-hidden="true">🇮🇳</span></button></div></div>
+<button type="button" class="menu-toggle" aria-label="Меню" aria-controls="navigation" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true" focusable="false"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
 <nav id="navigation" aria-label="Главное меню"><a href="#help">Нужна помощь</a><a href="#guides">Памятки</a><a href="#about">О программе</a><a href="#employers">Работодателям</a><a href="#partners">Партнёрам</a></nav>
 </div></header>
 <main id="main" tabindex="-1"></main>
@@ -1176,6 +1185,33 @@ function route(){const hash=(location.hash.slice(1)||'home');const [page,id,form
 function bindPage(){bindPartnerForm();bindPrearrival();const issueSearch=document.getElementById('issue-search');if(issueSearch)issueSearch.addEventListener('input',()=>{const q=issueSearch.value.trim().toLocaleLowerCase(I18N.language);const found=content.issues.filter(x=>(x.title+' '+x.summary+' '+x.steps.join(' ')).toLocaleLowerCase(I18N.language).includes(q));document.getElementById('issue-results').innerHTML=found.length?found.map(issueCard).join(''):`<div class="empty-state"><h3>Не нашли совпадений</h3><p>Попробуйте слово «зарплата», «договор» или <a href="#request">подготовьте описание вопроса</a>.</p></div>`;I18N.translateTree(document.getElementById('issue-results'))});const citizen=document.getElementById('citizenship');if(citizen)citizen.addEventListener('change',()=>{const note=document.getElementById('citizen-note');note.hidden=citizen.value==='Не указано';note.textContent=['Кыргызстан','Казахстан','Армения','Беларусь'].includes(citizen.value)?'Вы выбрали государство ЕАЭС. Для его граждан предусмотрены особенности трудоустройства в России. Другие требования зависят от статуса и ситуации; см. памятку о гражданстве.':citizen.value==='Россия'?'Для граждан России применяются российские правила трудоустройства. Подходящий формат помощи определяется темой вопроса и условиями программы.':'Требования зависят от гражданства и основания пребывания. Участие страны в СНГ, ШОС или БРИКС само по себе не определяет порядок трудоустройства.';I18N.translateTree(note)});const gs=document.getElementById('guide-search');if(gs){const filter=()=>{const q=gs.value.trim().toLocaleLowerCase(I18N.language);const found=content.guides.filter(x=>(x.title+' '+x.summary+' '+x.body).toLocaleLowerCase(I18N.language).includes(q));document.getElementById('guide-count').textContent=t('Найдено памяток:')+' '+found.length;document.getElementById('guide-results').innerHTML=found.length?found.map(guideCard).join(''):'<div class="empty-state"><h3>По этому запросу памяток нет</h3><p>Измените запрос или нажмите «Показать все».</p></div>';I18N.translateTree(document.getElementById('guide-results'))};gs.addEventListener('input',filter);document.getElementById('reset-search').addEventListener('click',()=>{gs.value='';filter();gs.focus()})}document.querySelectorAll('[data-start]').forEach(b=>b.addEventListener('click',()=>{draft.topic=b.dataset.start;requestReview=false;location.hash='request'}));const form=document.getElementById('draft-form');if(form){form.addEventListener('input',()=>{draft=Object.fromEntries(new FormData(form))});form.addEventListener('submit',e=>{e.preventDefault();draft=Object.fromEntries(new FormData(form));requestReview=true;main.innerHTML=requestPage();I18N.translateTree(main);bindPage();main.focus();window.scrollTo({top:0,behavior:'instant'})})}document.getElementById('edit-draft')?.addEventListener('click',()=>{requestReview=false;main.innerHTML=requestPage();I18N.translateTree(main);bindPage();document.querySelector('[name="topic"]').focus()});document.getElementById('download-draft')?.addEventListener('click',downloadDraft);}
 function downloadDraft(){const issue=content.issues.find(x=>x.id===draft.topic);const text=[t('Черновик обращения для консультации'),t('ОФ «САФСПП»'),t('Этот файл — личный черновик. Он не отправлен в фонд.'),'',`${t('Тема')}: ${issue?.title||t('Другая ситуация')}`,`${t('Гражданство')}: ${t(draft.country)}`,`${t('Регион')}: ${draft.region||t('Не указан')}`,`${t('Язык')}: ${t(draft.language)}`,`${t('Ситуация')}: ${t(draft.stage)}`,'',t('Описание')+':',draft.text,'',t('Подготовлено на сайте САФСПП. Храните файл так, чтобы его не могли прочитать посторонние.')].join('\n');const url=URL.createObjectURL(new Blob(['\uFEFF'+text],{type:'text/plain;charset=utf-8'}));const a=document.createElement('a');a.href=url;a.download='SAFSPP-draft.txt';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);document.getElementById('download-note').textContent=t('Файл подготовлен для скачивания. Обращение не отправлено в фонд.')}
 document.querySelector('[data-privacy]').addEventListener('click',()=>{dialogContent.innerHTML='<div class="dialog-content"><h2 id="dialog-title">О данных и конфиденциальности</h2><p>Форма подготовки создаёт личный черновик в памяти вашей вкладки: введённый текст не отправляется на сервер и не сохраняется после обновления страницы.</p><p>Если вы нажмёте «Сохранить файл», черновик будет скачан на ваше устройство. Не вводите паспортные данные, медицинские сведения, номера документов и другие чувствительные подробности.</p><p>Черновик не передаётся специалистам автоматически. Сайт не использует рекламные счётчики.</p></div>';I18N.translateTree(dialogContent);dialog.showModal()});document.querySelector('.close-button').addEventListener('click',()=>dialog.close());dialog.addEventListener('click',e=>{if(e.target===dialog){const r=dialog.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)dialog.close()}});
+const menuToggle=document.querySelector('.menu-toggle');
+const navigation=document.getElementById('navigation');
+const mobileNavigation=window.matchMedia('(max-width:720px)');
+function setNavigationOpen(open,restoreFocus=false){
+ navigation.classList.toggle('is-open',open);
+ menuToggle.setAttribute('aria-expanded',String(open));
+ if(restoreFocus)menuToggle.focus();
+}
+menuToggle.addEventListener('click',()=>setNavigationOpen(menuToggle.getAttribute('aria-expanded')!=='true'));
+navigation.addEventListener('click',event=>{
+ const link=event.target.closest('a');
+ if(link&&mobileNavigation.matches)setNavigationOpen(false,link.hash===location.hash);
+});
+document.addEventListener('keydown',event=>{
+ if(event.key==='Escape'&&menuToggle.getAttribute('aria-expanded')==='true'){
+  event.preventDefault();setNavigationOpen(false,true);
+ }
+});
+document.addEventListener('click',event=>{
+ if(menuToggle.getAttribute('aria-expanded')==='true'&&!event.target.closest('.header'))setNavigationOpen(false);
+});
+window.addEventListener('hashchange',()=>setNavigationOpen(false));
+mobileNavigation.addEventListener('change',()=>{
+ const active=document.activeElement;
+ setNavigationOpen(false,mobileNavigation.matches&&navigation.contains(active));
+ if(!mobileNavigation.matches&&active===menuToggle)(navigation.querySelector('[aria-current="page"]')||navigation.querySelector('a')).focus();
+});
 document.querySelector('.skip').addEventListener('click',e=>{e.preventDefault();main.focus();main.scrollIntoView({block:'start'})});
 I18N.initialize(()=>{const form=document.getElementById('draft-form');if(form)draft=Object.fromEntries(new FormData(form));content=I18N.localizeData(window.SAF_CONTENT);route()});
 window.addEventListener('hashchange',route);route();
