@@ -32,8 +32,7 @@ def site_announcement(publication):
 def platform_entry():
     return (
         '<div class="portal-entry-bar">'
-        f'<a class="portal-test-entry" href="{PLATFORM_URL}/cabinet/">Личный кабинет</a>'
-        f'<a class="portal-test-entry" href="{PLATFORM_URL}/partners/preview/">Демо кабинета организации</a></div>'
+        f'<a class="portal-test-entry" href="{PLATFORM_URL}/cabinet/">Личный кабинет</a></div>'
     )
 
 
@@ -60,7 +59,7 @@ def main():
     DEST.mkdir(parents=True, exist_ok=True, mode=0o755)
     source_html = re.sub(r'<meta\s+[^>]*name=["\']robots["\'][^>]*>', '', source_html, flags=re.I)
     source_html = source_html.replace('</head>', '<meta name="robots" content="noindex,nofollow,noarchive">\n<style>.portal-entry-bar{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px 28px;padding:10px 18px;background:#14495b}.portal-test-entry{display:block;text-align:center;padding:4px 0;color:#fff;font:600 15px/1.4 Arial,sans-serif;text-decoration:underline;text-underline-offset:3px}.portal-test-entry:focus-visible{outline:3px solid #c49a4a;outline-offset:3px}</style>\n</head>', 1)
-    entry = '<div class="portal-entry-bar"><a class="portal-test-entry" href="/login/">Личный кабинет · тестовый режим</a><a class="portal-test-entry" href="/partners/preview/">Кабинет организации · демоверсия</a></div>'
+    entry = '<div class="portal-entry-bar"><a class="portal-test-entry" href="/login/">Личный кабинет · тестовый режим</a></div>'
     if args.platform:
         # Fetch and validate before touching the currently served index.
         announcement = site_announcement(load_publication())
