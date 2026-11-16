@@ -29,11 +29,83 @@ def site_announcement(publication):
     return f'<section class="shell portal-announcement"><h2>{title}</h2><p>{body}</p></section>'
 
 
-def platform_entry():
-    return (
-        '<div class="portal-entry-bar">'
-        f'<a class="portal-test-entry" href="{PLATFORM_URL}/cabinet/">Личный кабинет</a></div>'
-    )
+CABINET_HEADER_CSS = """
+.header .header-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    gap: 10px 22px;
+    align-items: center;
+    padding-block: 14px;
+}
+.header .header-identity { grid-column: 1; grid-row: 1; }
+.header .language-picker { grid-column: 2; grid-row: 1; margin-left: 0; }
+.header .portal-cabinet {
+    grid-column: 3;
+    grid-row: 1;
+    justify-self: end;
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    justify-content: center;
+    padding: 9px 15px;
+    border: 1px solid #14495b;
+    border-radius: 8px;
+    background: #14495b;
+    color: #fff;
+    font: 600 14px/1.3 "Segoe UI", Arial, sans-serif;
+    text-decoration: none;
+    white-space: nowrap;
+}
+.header .portal-cabinet:hover { background: #0e3542; }
+.header .portal-cabinet:focus-visible { outline: 3px solid #c49a4a; outline-offset: 3px; }
+html[data-theme="dark"] .header .portal-cabinet { border-color: #7caaa3; }
+.header #navigation {
+    grid-column: 1 / -1;
+    grid-row: 2;
+    width: 100%;
+    justify-content: flex-end;
+    margin: 0;
+    padding: 5px 0 0;
+    gap: 4px 22px;
+    border-top: 1px solid var(--stone);
+}
+@media (min-width: 721px) and (max-width: 900px) {
+    .header .header-row { grid-template-columns: minmax(0, 1fr) auto; }
+    .header .portal-cabinet { grid-column: 2; }
+    .header .language-picker { grid-column: 1 / -1; grid-row: 2; justify-self: start; }
+    .header #navigation { grid-row: 3; }
+}
+@media (max-width: 720px) {
+    .header .header-row { grid-template-columns: minmax(0, 1fr) auto; gap: 10px; }
+    .header .portal-cabinet { grid-column: 2; padding-inline: 11px; font-size: 13px; }
+    .header .language-picker {
+        grid-column: 1 / -1;
+        grid-row: 2;
+        padding-right: 54px;
+        width: 100%;
+    }
+    .header .menu-toggle { grid-column: 2; grid-row: 2; }
+    .header #navigation { grid-row: 3; padding: 4px 14px; gap: 0; border-color: var(--line); }
+}
+@media (max-width: 440px) {
+    .header .header-identity .brand img { width: 34px; height: 34px; flex-basis: 34px; }
+    .header .header-identity .brand { gap: 7px; }
+    .header .brand-name { font-size: 11px; }
+    .header .brand-line { white-space: normal; }
+    .header .portal-cabinet { padding-inline: 9px; font-size: 12px; }
+    .header .language-flags { gap: 3px; }
+    .header .language-flag span { font-size: clamp(15px, 4.7vw, 20px); }
+}
+"""
+
+
+def add_cabinet_button(source_html, url):
+    marker = '<div class="language-picker">'
+    if source_html.count(marker) != 1:
+        raise SystemExit('Expected one language picker in the site header')
+    button = f'<a class="portal-cabinet" href="{escape(url, quote=True)}">Личный кабинет</a>'
+    source_html = source_html.replace(marker, button + '\n' + marker, 1)
+    return source_html.replace('</head>', f'<style>{CABINET_HEADER_CSS}</style>\n</head>', 1)
 
 
 def load_publication():
@@ -58,15 +130,15 @@ def main():
         raise SystemExit('Source is not the expected complete HTML document')
     DEST.mkdir(parents=True, exist_ok=True, mode=0o755)
     source_html = re.sub(r'<meta\s+[^>]*name=["\']robots["\'][^>]*>', '', source_html, flags=re.I)
-    source_html = source_html.replace('</head>', '<meta name="robots" content="noindex,nofollow,noarchive">\n<style>.portal-entry-bar{display:flex;justify-content:center;align-items:center;flex-wrap:wrap;gap:4px 28px;padding:10px 18px;background:#14495b}.portal-test-entry{display:block;text-align:center;padding:4px 0;color:#fff;font:600 15px/1.4 Arial,sans-serif;text-decoration:underline;text-underline-offset:3px}.portal-test-entry:focus-visible{outline:3px solid #c49a4a;outline-offset:3px}</style>\n</head>', 1)
-    entry = '<div class="portal-entry-bar"><a class="portal-test-entry" href="/login/">Личный кабинет · тестовый режим</a></div>'
+    source_html = source_html.replace('</head>', '<meta name="robots" content="noindex,nofollow,noarchive">\n</head>', 1)
+    cabinet_url = '/login/'
     if args.platform:
         # Fetch and validate before touching the currently served index.
         announcement = site_announcement(load_publication())
-        entry = platform_entry()
+        cabinet_url = PLATFORM_URL + '/cabinet/'
         source_html = source_html.replace('<main id="main"', announcement + '<main id="main"', 1)
         source_html = source_html.replace('</head>', '<style>.portal-announcement{padding-block:24px}</style>\n</head>', 1)
-    source_html = re.sub(r'(<body\b[^>]*>)', lambda m: m.group(1) + '\n' + entry, source_html, count=1, flags=re.I)
+    source_html = add_cabinet_button(source_html, cabinet_url)
     assets = SOURCE / 'assets'
     if not assets.is_dir() or assets.is_symlink():
         raise SystemExit('Missing regular assets directory')
