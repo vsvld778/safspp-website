@@ -139,6 +139,9 @@ def main():
         source_html = source_html.replace('<main id="main"', announcement + '<main id="main"', 1)
         source_html = source_html.replace('</head>', '<style>.portal-announcement{padding-block:24px}</style>\n</head>', 1)
     source_html = add_cabinet_button(source_html, cabinet_url)
+    if args.platform:
+        editorial = '<script defer src="assets/editorial.js?v=1" data-surface="site"></script>'
+        source_html = source_html.replace("</head>", editorial + "\n</head>", 1)
     assets = SOURCE / 'assets'
     if not assets.is_dir() or assets.is_symlink():
         raise SystemExit('Missing regular assets directory')
