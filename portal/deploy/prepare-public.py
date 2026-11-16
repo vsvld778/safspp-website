@@ -105,6 +105,21 @@ def add_cabinet_button(source_html, url):
         raise SystemExit('Expected one language picker in the site header')
     button = f'<a class="portal-cabinet" href="{escape(url, quote=True)}">Личный кабинет</a>'
     source_html = source_html.replace(marker, button + '\n' + marker, 1)
+    catalog_marker = 'const catalogs=window.SAF_LOCALES;'
+    if source_html.count(catalog_marker) != 1:
+        raise SystemExit('Expected one site translation catalog')
+    labels = json.dumps({
+        'ru': 'Личный кабинет',
+        'en': 'My account',
+        'tg': 'Ҳисоби шахсӣ',
+        'uz': 'Shaxsiy kabinet',
+        'kk': 'Жеке кабинет',
+        'ky': 'Жеке кабинет',
+        'be': 'Асабісты кабінет',
+        'hi': 'मेरा खाता',
+    }, ensure_ascii=False)
+    translated_labels = f'\n  for(const [code,label] of Object.entries({labels}))catalogs[code].portalCabinet=label;'
+    source_html = source_html.replace(catalog_marker, catalog_marker + translated_labels, 1)
     return source_html.replace('</head>', f'<style>{CABINET_HEADER_CSS}</style>\n</head>', 1)
 
 
